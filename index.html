@@ -109,7 +109,6 @@
   .photo .frame{height:190px;background:#c9ad74;display:grid;place-items:center;overflow:hidden}
   .photo img{width:100%;height:100%;object-fit:cover;filter:sepia(.75) contrast(1.05);display:none}
   .photo .ph{text-align:center;font-family:'Special Elite';font-size:15px;color:var(--wood);padding:10px}
-  .photo .cap{font-family:'Special Elite';font-size:12px;margin-top:6px;opacity:.75}
 
   /* ===== RADIO ===== */
   .sparks{position:absolute;inset:0;z-index:1;pointer-events:none}
@@ -251,7 +250,6 @@
       </div>
       <div class="photo">
         <div class="frame"><img id="tImg" alt=""><div class="ph" id="tPh">Acá va una foto<br><span id="tPath"></span></div></div>
-        <div class="cap" id="tCap"></div>
       </div>
     </div>
   </div>
@@ -345,7 +343,6 @@
       <li><a href="https://www.enacom.gob.ar/radiofonia_p5252" target="_blank">ENACOM – Radiofonía</a></li>
       <li><a href="https://www.epec.com.ar/docs/educativo/institucional/ficharadio.pdf" target="_blank">EPEC – La invención de la radio</a></li>
     </ul></div>
-    <div><h3>Imágenes</h3><p>Créditos de las imágenes: se indican debajo de cada foto en la cronología.</p></div>
   </div>
   <div class="end">Medios Comunicativos Masivos: Radio</div>
 </footer>
@@ -372,7 +369,7 @@ const events = [
 /* =========================================================
    2) AUDIOS DE LA RADIO
    - La primera "emisora" es la ESTÁTICA (se genera sola, no necesita archivo)
-   - Para tus programas: poné los archivos en la carpeta "audios"
+   - Para tus programas: poné los archivos al lado de este index.html
      y cambiá "src", "title" y "desc". Podés agregar o borrar.
    ========================================================= */
 const tracks = [
@@ -381,9 +378,8 @@ const tracks = [
     why:`<h4>¿Por qué se produce la estática?</h4>
       <p>La estática es ruido: señales eléctricas al azar que no llevan ningún mensaje. Entre dos emisoras la radio no tiene nada para sintonizar, así que amplifica todo lo que capta, y eso suena como un "shhh". Ese ruido nace de muchos lugares a la vez: de las tormentas y del Sol, de los motores y los aparatos eléctricos que hay cerca, y hasta de los componentes del propio receptor.</p>
       <p style="margin-top:8px">Cuando la señal de una emisora es débil o llega de lejos, el ruido la tapa. Por eso la estática se nota más en la AM, que es más sensible a las interferencias que la FM.</p>` },
-  { title:"Audio 1", desc:"Acá va la descripción de tu primer audio.", src:"audios/audio1.mp3" },
-  { title:"Audio 2", desc:"Acá va la descripción de tu segundo audio.", src:"audios/audio2.mp3" },
-  { title:"Audio 3", desc:"Acá va la descripción de tu tercer audio.", src:"audios/audio3.mp3" },
+  { title:"Audio 1", desc:"Acá va la descripción de tu primer audio.", src:"audio1.ogg" },
+  { title:"Audio 2", desc:"Acá va la descripción de tu segundo audio.", src:"audio2.mp3" },
 ];
 
 /* ================= Engranajes decorativos ================= */
@@ -421,7 +417,6 @@ function showEvent(k){
   $('tYr').innerHTML = e.y.replace('<br>',' – ');
   $('tTitle').textContent = e.t;
   $('tText').textContent = e.d;
-  $('tCap').textContent = e.cap || '';
   $('tPath').textContent = e.img;
   const img = $('tImg'), ph = $('tPh');
   img.style.display = 'none'; ph.style.display = 'block';
