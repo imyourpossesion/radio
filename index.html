@@ -161,7 +161,6 @@
     border:5px double var(--brass-d);border-radius:8px;padding:26px 30px;box-shadow:0 7px 0 #000,0 0 40px rgba(224,176,74,.25),inset 0 0 40px rgba(150,100,30,.28)}
   .now .num{font-family:'Special Elite';color:var(--copper);letter-spacing:2px;text-transform:uppercase;font-size:14px}
   .now h3{font-size:27px;margin:2px 0 6px;color:var(--wine)}
-  .now .msg{margin-top:12px;font-family:'Special Elite';font-size:15px;background:var(--parch2);border:2px dashed var(--brass-d);padding:6px 12px;display:none}
   .why{margin-top:14px;border-top:2px dashed var(--brass-d);padding-top:12px}
   .why h4{font-size:17px;color:var(--wine);margin-bottom:6px;letter-spacing:1px}
   .dots{display:flex;gap:12px;justify-content:center;margin-top:16px}
@@ -304,7 +303,6 @@
       <h3 id="nTitle"></h3>
       <p id="nDesc"></p>
       <div class="why" id="nWhy" style="display:none"></div>
-      <div class="msg" id="nMsg"></div>
     </div>
   </div>
   <div class="wave" style="color:var(--leather)"><svg viewBox="0 0 1440 50" preserveAspectRatio="none"><path fill="currentColor" d="M0 0 Q180 60 360 24 T720 24 T1080 24 T1440 24 V50 H0Z"/></svg></div>
@@ -379,7 +377,7 @@ const tracks = [
       <p>La estática es ruido: señales eléctricas al azar que no llevan ningún mensaje. Entre dos emisoras la radio no tiene nada para sintonizar, así que amplifica todo lo que capta, y eso suena como un "shhh". Ese ruido nace de muchos lugares a la vez: de las tormentas y del Sol, de los motores y los aparatos eléctricos que hay cerca, y hasta de los componentes del propio receptor.</p>
       <p style="margin-top:8px">Cuando la señal de una emisora es débil o llega de lejos, el ruido la tapa. Por eso la estática se nota más en la AM, que es más sensible a las interferencias que la FM.</p>` },
   { title:"La primera transmisión radiofónica", desc:"Audio de la primera transmisión radiofónica en Argentina, emitida el 27 de agosto de 1920. Fuente: Historia Visual de la Argentina 1900-2000, CD 1. Autor desconocido.", src:"audio1.ogg" },
-  { title:"Audio 2", desc:"Acá va la descripción de tu segundo audio.", src:"audio2.mp3" },
+  { title:"Nuestro programa de radio", desc:"Programa grabado por Bruno, Sol y Elena: un recorrido corto por la historia de la radio, desde las familias reunidas alrededor del aparato hasta los podcasts y las transmisiones en vivo de hoy. Cierra con un cover de Monster High de THUNDERGY.", src:"audio2.mp3" },
 ];
 
 /* ================= Engranajes decorativos ================= */
@@ -492,7 +490,6 @@ function render(){
   $('needle').style.left = (tracks.length > 1 ? 8 + i * (84 / (tracks.length - 1)) : 50) + '%';
   [...$('dots').children].forEach((d, k) => d.classList.toggle('act', k === i));
   radio.classList.toggle('static', t.type === 'static');
-  $('nMsg').style.display = 'none';
 }
 
 function setPlaying(on){
@@ -512,11 +509,9 @@ function play(){
   const t = tracks[i];
   if(t.type === 'static'){ startStatic(); setPlaying(true); return; }
   audio.src = t.src;
-  audio.play().then(() => setPlaying(true)).catch(() => {
+  audio.play().then(() => setPlaying(true)).catch(err => {
+    if(err && err.name === 'AbortError') return;   // cambió de emisora justo antes: no es un error
     setPlaying(false);
-    const m = $('nMsg');
-    m.textContent = `Todavía no hay audio en "${t.src}". Poné tu archivo ahí y recargá.`;
-    m.style.display = 'block';
   });
 }
 
@@ -534,7 +529,7 @@ $('next').onclick = () => go(i + 1);
 $('vol').oninput = e => { audio.volume = e.target.value; if(noiseGain) noiseGain.gain.value = e.target.value * 0.35; };
 audio.volume = 0.8;
 audio.onended = () => setPlaying(false);
-audio.onerror = () => { if(audio.getAttribute('src')){ setPlaying(false); $('nMsg').textContent = `No se encontró "${tracks[i].src}".`; $('nMsg').style.display = 'block'; } };
+audio.onerror = () => { if(audio.getAttribute('src')) setPlaying(false); };
 document.addEventListener('keydown', e => {
   if(e.key === 'ArrowLeft')  go(i - 1);
   if(e.key === 'ArrowRight') go(i + 1);
